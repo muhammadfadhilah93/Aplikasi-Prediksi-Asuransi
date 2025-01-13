@@ -182,7 +182,18 @@ with tab2:
 
 # Tab 3: Perbandingan Metrik
 with tab3:
-    st.markdown("<h2 style='color: #3498db;'>📈 Perbandingan Kinerja Model</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    <h2 style="color: #3498db;">📈 Perbandingan Kinerja Model</h2>
+    <p style="font-size: 16px;">
+        Di sini Anda dapat mengevaluasi kinerja berbagai model machine learning dalam memprediksi biaya asuransi. 
+        Kami menggunakan tiga metrik evaluasi utama:
+    </p>
+    <ul style="font-size: 16px;">
+        <li><b>MSE (Mean Squared Error):</b> Mengukur rata-rata kuadrat dari kesalahan prediksi (semakin rendah semakin baik).</li>
+        <li><b>MAE (Mean Absolute Error):</b> Mengukur rata-rata kesalahan absolut (semakin rendah semakin baik).</li>
+        <li><b>R² (R-squared):</b> Mengukur seberapa baik model menjelaskan variasi data (semakin tinggi semakin baik).</li>
+    </ul>
+    """, unsafe_allow_html=True)
 
     # Perhitungan metrik untuk setiap model
     metrik = []
@@ -195,17 +206,44 @@ with tab3:
 
     metrik_df = pd.DataFrame(metrik)
 
-    st.dataframe(metrik_df.style.format({"MSE": "{:,.2f}", "MAE": "{:,.2f}", "R2": "{:.2%}"}))
+    st.markdown("""
+    <h3 style="color: #3498db;">📊 Tabel Perbandingan Kinerja Model</h3>
+    <p>Gunakan tabel ini untuk membandingkan nilai MSE, MAE, dan R² untuk setiap model. Pilih model dengan MSE dan MAE terendah serta R² tertinggi.</p>
+    """, unsafe_allow_html=True)
+    st.dataframe(
+        metrik_df.style.format({
+            "MSE": "{:,.2f}",
+            "MAE": "{:,.2f}",
+            "R2": "{:.2%}"
+        }).background_gradient(cmap="coolwarm", subset=["R2"]),
+        use_container_width=True
+    )
+
+    st.markdown("""
+    <h3 style="color: #3498db;">📈 Visualisasi Kinerja Model</h3>
+    <p>Grafik berikut memvisualisasikan skor R² untuk setiap model. Semakin tinggi skor R², semakin baik model dalam menjelaskan variasi data.</p>
+    """, unsafe_allow_html=True)
 
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.barplot(data=metrik_df, x="Model", y="R2", palette="viridis", ax=ax)
-    ax.set_title("Perbandingan Skor R² untuk Setiap Model", fontsize=14)
+    ax.set_title("Perbandingan Skor R² untuk Setiap Model", fontsize=14, color="#2c3e50")
     ax.set_ylabel("R²", fontsize=12)
     ax.set_xlabel("Model", fontsize=12)
     for i, bar in enumerate(ax.patches):
         ax.annotate(f"{bar.get_height():.2%}", (bar.get_x() + bar.get_width() / 2, bar.get_height()),
                     ha='center', va='bottom', fontsize=10, color="black")
     st.pyplot(fig)
+
+    st.markdown("""
+    <div style="padding: 15px; border-radius: 5px;">
+    <h4 style="color: #3498db;">💡 Kesimpulan</h4>
+    <p>
+        - Model dengan nilai <b>R² tertinggi</b> memiliki kemampuan terbaik dalam menjelaskan variasi data.<br>
+        - Model dengan nilai <b>MSE</b> dan <b>MAE terendah</b> menunjukkan prediksi yang paling akurat.<br>
+        Anda dapat menggunakan informasi ini untuk memilih model yang paling sesuai dengan kebutuhan analisis Anda.
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 st.write("UAS DATA MINING (211220010 - MUHAMMAD FADHILAH)")
