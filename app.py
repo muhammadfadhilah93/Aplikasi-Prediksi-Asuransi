@@ -12,7 +12,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from io import BytesIO
 import locale
-
+from babel.numbers import format_currency
 
 # Konfigurasi halaman
 st.set_page_config(page_title="Aplikasi Prediksi Asuransi", layout="wide")
@@ -38,7 +38,6 @@ st.markdown(
 
 # Logo
 st.sidebar.image("logo.png", use_container_width=True)
-
 
 st.sidebar.header("Input Pengguna")
 nama_pengguna = st.sidebar.text_input("Nama Anda", "Pengguna")
@@ -98,32 +97,16 @@ if submit_button:
     })
     data_pengguna_processed = preprocessor.transform(data_pengguna)
 
-st.markdown(
-    """
-    <style>
-    /* Desain tab custom */
-    .stTabs [data-baseweb="tab"] {
-        background-color: #16404D;
-        color: white; 
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 20px;
-        padding: 10px 20px;
-        margin: 5px;
-        transition: background-color 0.3s ease;
-    }
-    .stTabs [data-baseweb="tab"]:hover {
-        background-color: #000957;  /* Warna tab saat hover */
-    }
-    .stTabs .stTab:first-child {
-        margin-left: 0;
-    }
-    .stTabs [data-baseweb="tab"]:focus {
-        outline: none;  /* Hilangkan outline saat tab fokus */
-    }
-    </style>
-    """, unsafe_allow_html=True
-)
+# Fallback untuk locale
+try:
+    locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
+except locale.Error:
+    # Fallback ke en_US.UTF-8 jika id_ID.UTF-8 tidak tersedia
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
+# Fungsi untuk format IDR
+def format_idr(value):
+    return format_currency(value, 'IDR', locale='id_ID')
 
 # Tab
 tab0, tab1, tab2, tab3 = st.tabs(["👋 Selamat Datang", "🔍 Eksplorasi Data", "📊 Prediksi", "📈 Perbandingan Metrik"])
@@ -159,8 +142,6 @@ with tab1:
     st.pyplot(fig)
 
 # Tab 2: Prediksi
-locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
-
 with tab2:
     st.header("Prediksi Biaya Asuransi")
     st.write("Masukkan data Anda untuk mendapatkan prediksi dari berbagai model.")
@@ -177,7 +158,7 @@ with tab2:
 
         # Format hasil prediksi mata uang IDR
         pred_df = pd.DataFrame({"Model": list(prediksi.keys()), "Biaya Asuransi": list(prediksi.values())})
-        pred_df["Biaya Asuransi"] = pred_df["Biaya Asuransi"].apply(lambda x: locale.currency(x, grouping=True))
+        pred_df["Biaya Asuransi"] = pred_df["Biaya Asuransi"].apply(lambda x: format_idr(x))
 
         # Tampilkan prediksi sebagai tabel
         st.write(pred_df)
@@ -189,7 +170,7 @@ with tab2:
         ax.set_ylabel("Biaya Asuransi (IDR)")
         ax.set_xlabel("Model")
         for i, bar in enumerate(ax.patches):
-            ax.annotate(locale.currency(bar.get_height(), grouping=True), (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+            ax.annotate(format_idr(bar.get_height()), (bar.get_x() + bar.get_width() / 2, bar.get_height()),
                         ha='center', va='bottom', fontsize=10, color="black")
         st.pyplot(fig)
 
@@ -210,7 +191,7 @@ with tab2:
 # Tab 3: Perbandingan Metrik
 with tab3:
     st.markdown("""
-    <h2 style="color: #3498db   ;">📈 Perbandingan Kinerja Model</h2>
+    <h2 style="color: #3498db;">📈 Perbandingan Kinerja Model</h2>
     <p style="font-size: 16px;">
         Di sini Anda dapat mengevaluasi kinerja berbagai model machine learning dalam memprediksi biaya asuransi. 
         Kami menggunakan tiga metrik evaluasi utama:
@@ -271,7 +252,5 @@ with tab3:
     </p>
     </div>
     """, unsafe_allow_html=True)
-
-
 
 st.write("UAS DATA MINING (211220010 - MUHAMMAD FADHILAH)")
