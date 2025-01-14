@@ -106,13 +106,13 @@ tab0, tab1, tab2, tab3 = st.tabs(["👋 Selamat Datang", "🔍 Eksplorasi Data",
 # Tab 0: Selamat Datang
 with tab0:
     st.header(f"Selamat Datang, {nama_pengguna}!")
+    st.image("1.png")
     st.write("Aplikasi ini dirancang untuk membantu Anda menganalisis dan memprediksi biaya asuransi berdasarkan data demografi dan kesehatan. Dengan menggunakan teknologi machine learning terbaru, aplikasi ini memberikan wawasan yang lebih dalam tentang faktor-faktor yang memengaruhi biaya asuransi, seperti usia, jenis kelamin, status merokok, dan riwayat kesehatan.")
     st.markdown("- Analisis Data Demografi & Kesehatan: Lakukan eksplorasi terhadap faktor-faktor penting yang berkontribusi pada biaya asuransi.")
     st.markdown("- Visualisasi Interaktif: Lihat grafik dan tabel yang memudahkan pemahaman tentang hubungan antara data demografi dan biaya asuransi.")
     st.markdown("- MPrediksi Akurat: Gunakan model machine learning untuk memprediksi biaya asuransi dengan lebih presisi berdasarkan input data yang diberikan.")
     st.markdown("Dengan antarmuka yang mudah digunakan dan hasil yang dapat dipercaya, aplikasi ini menjadi alat yang sempurna untuk Anda yang ingin lebih memahami pengaruh faktor-faktor tertentu terhadap biaya asuransi dan membuat keputusan yang lebih baik dalam merencanakan masa depan keuangan.")
-    st.image("1.png")
-
+    
 # Tab 1: Eksplorasi Data
 with tab1:
     st.header("Eksplorasi Data")
@@ -241,7 +241,7 @@ with tab3:
     <p>
         - Model dengan nilai <b>R² tertinggi</b> memiliki kemampuan terbaik dalam menjelaskan variasi data.<br>
         - Model dengan nilai <b>MSE</b> dan <b>MAE terendah</b> menunjukkan prediksi yang paling akurat.<br>
-        Anda dapat menggunakan informasi ini untuk memilih model yang paling sesuai dengan kebutuhan analisis Anda.
+       
     </p>
     </div>
     """, unsafe_allow_html=True)
